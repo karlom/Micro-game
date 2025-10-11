@@ -80,10 +80,23 @@
 
 ## 📋 系统要求
 
+### 开发环境
 - Godot 4.3或更高版本
-- Windows 10/11 (其他平台未测试)
-- 至少4GB RAM
-- 网络连接（用于AI API调用）
+
+### 支持平台
+- **Windows**: Windows 10/11 (64位)
+- **macOS**: macOS 10.15+ (Intel/Apple Silicon)
+- **Linux**: Ubuntu 18.04+, Fedora 32+, Arch Linux等主流发行版
+- **Android**: Android 6.0+ (API Level 23+)
+
+### 硬件要求
+- **最低配置**: 4GB RAM, 1GB可用存储空间
+- **推荐配置**: 8GB RAM, 2GB可用存储空间
+- **网络**: 稳定的互联网连接（用于AI API调用）
+
+### 注意事项
+- Android平台需要额外的平台特定配置
+- 所有平台都需要有效的AI服务API密钥才能正常使用对话功能
 
 ## 🚀 快速开始
 

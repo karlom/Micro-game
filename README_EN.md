@@ -80,10 +80,23 @@ A god-simulation sandbox game built on Godot 4 as a multi-agent AI social simula
 
 ## 📋 System Requirements
 
+### Development Environment
 - Godot 4.3 or higher
-- Windows 10/11 (other platforms not tested)
-- At least 4GB RAM
-- Internet connection (for AI API calls)
+
+### Supported Platforms
+- **Windows**: Windows 10/11 (64-bit)
+- **macOS**: macOS 10.15+ (Intel/Apple Silicon)
+- **Linux**: Ubuntu 18.04+, Fedora 32+, Arch Linux and other major distributions
+- **Android**: Android 6.0+ (API Level 23+)
+
+### Hardware Requirements
+- **Minimum**: 4GB RAM, 1GB available storage
+- **Recommended**: 8GB RAM, 2GB available storage
+- **Network**: Stable internet connection (for AI API calls)
+
+### Important Notes
+- Android platform requires additional platform-specific configuration
+- All platforms require valid AI service API keys for dialogue functionality
 
 ## 🚀 Quick Start
 
