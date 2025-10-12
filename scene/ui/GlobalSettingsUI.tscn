@@ -111,6 +111,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "输入API密钥"
 secret = true
+clear_button_enabled = true
 
 [node name="AILabelContainer" type="HBoxContainer" parent="SettingsUI/NinePatchRect/VBoxContainer/TabContainer/API设置"]
 layout_mode = 2
