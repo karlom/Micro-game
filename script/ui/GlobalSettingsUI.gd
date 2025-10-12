@@ -16,6 +16,8 @@ var current_settings = {}
 @onready var map_button = $SettingsUI/NinePatchRect/VBoxContainer/TabContainer/游戏/MapButton
 @onready var main_menu_button = $SettingsUI/NinePatchRect/VBoxContainer/TabContainer/游戏/MainMenuButton
 @onready var quit_button = $SettingsUI/NinePatchRect/VBoxContainer/TabContainer/游戏/QuitButton
+@onready var window_mode_option = $SettingsUI/NinePatchRect/VBoxContainer/TabContainer/游戏/WindowModeContainer/WindowModeOption
+@onready var resolution_option = $SettingsUI/NinePatchRect/VBoxContainer/TabContainer/游戏/ResolutionContainer/ResolutionOption
 
 func _ready():
 	hide_settings()
@@ -37,6 +39,8 @@ func _ready():
 	map_button.pressed.connect(_on_map_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+	window_mode_option.item_selected.connect(_on_window_mode_selected)
+	resolution_option.item_selected.connect(_on_resolution_selected)
 	
 	# 设置为单例，确保在场景转换时不被销毁
 	set_process_input(true)
@@ -81,6 +85,10 @@ func update_ui():
 	# 根据API类型显示/隐藏API Key输入框
 	api_key_input.get_parent().visible = current_settings.api_type != "Ollama"
 
+	# 初始化分辨率/窗口模式UI
+	_init_display_options()
+	_sync_display_options()
+
 # API类型选择回调
 func _on_api_type_selected(index):
 	current_settings.api_type = SettingsManager.api_types[index]
@@ -88,6 +96,57 @@ func _on_api_type_selected(index):
 	var models = SettingsManager.get_models_for_api(current_settings.api_type)
 	current_settings.model = models[0]
 	update_ui()
+
+# 初始化窗口模式与分辨率选项
+func _init_display_options():
+	if window_mode_option.get_item_count() == 0:
+		window_mode_option.add_item("窗口化")
+		window_mode_option.add_item("全屏")
+		window_mode_option.add_item("独占全屏")
+	if resolution_option.get_item_count() == 0:
+		for r in ["1280 x 720", "1600 x 900", "1920 x 1080", "2560 x 1440", "2880 x 1800", "3840 x 2160"]:
+			resolution_option.add_item(r)
+
+func _sync_display_options():
+	var mode = str(current_settings.get("window_mode", "windowed"))
+	var idx = 0
+	match mode:
+		"windowed": idx = 0
+		"fullscreen": idx = 1
+		"exclusive_fullscreen": idx = 2
+	window_mode_option.select(idx)
+
+	var w = int(current_settings.get("screen_width", 1280))
+	var h = int(current_settings.get("screen_height", 720))
+	var target = "%d x %d" % [w, h]
+	var found = false
+	for i in range(resolution_option.get_item_count()):
+		if resolution_option.get_item_text(i) == target:
+			resolution_option.select(i)
+			found = true
+			break
+	if not found:
+		resolution_option.add_item(target)
+		resolution_option.select(resolution_option.get_item_count() - 1)
+	resolution_option.disabled = (current_settings.get("window_mode", "windowed") == "fullscreen")
+
+func _on_window_mode_selected(_i):
+	var t = window_mode_option.get_item_text(window_mode_option.selected)
+	match t:
+		"窗口化":
+			current_settings.window_mode = "windowed"
+		"全屏":
+			current_settings.window_mode = "fullscreen"
+		"独占全屏":
+			current_settings.window_mode = "exclusive_fullscreen"
+	resolution_option.disabled = current_settings.window_mode == "fullscreen"
+
+func _on_resolution_selected(_i):
+	var txt = resolution_option.get_item_text(resolution_option.selected)
+	var parts = txt.split("x")
+	if parts.size() == 2:
+		current_settings.screen_width = int(parts[0].strip_edges())
+		current_settings.screen_height = int(parts[1].strip_edges())
 
 # 保存按钮回调
 func _on_save_pressed():
