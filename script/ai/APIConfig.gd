@@ -11,8 +11,8 @@ enum APIType {
 	DOUBAO,
 	GEMINI,
 	CLAUDE,
-	KIMI
-    OPENAI_COMPATIBLE  # 新增：OpenAI兼容API枚举
+	KIMI,
+	OPENAI_COMPATIBLE  # 新增：OpenAI兼容API枚举
 }
 
 # API配置数据结构
