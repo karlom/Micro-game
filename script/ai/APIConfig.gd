@@ -12,6 +12,7 @@ enum APIType {
 	GEMINI,
 	CLAUDE,
 	KIMI
+    OPENAI_COMPATIBLE  # 新增：OpenAI兼容API枚举
 }
 
 # API配置数据结构
@@ -128,9 +129,22 @@ static func _initialize():
 		"openai"
 	)
 	
+# 新增：OpenAI Compatible通用提供商
+	# URL 这里用占位符，在运行时替换或通过配置文件设置
+	_providers["OpenAICompatible"] = APIProvider.new(
+		"OpenAICompatible",
+		"OpenAI Compatible (自定义)",
+		"https://custom-openai-compatible.com/v1/chat/completions",  # 占位符URL，实际使用时可扩展动态设置
+		[],  # 模型列表为空，由用户指定或动态加载
+		true,
+		{"Content-Type": "application/json", "Authorization": "Bearer {api_key}"},
+		"openai",
+		"openai"
+	)
+	
 	_initialized = true
 
-# 获取所有API提供商名称
+# 获取所有API提供商名称（自动包含新增）
 static func get_api_types() -> Array[String]:
 	_initialize()
 	var result: Array[String] = []
@@ -209,7 +223,7 @@ static func build_headers(api_type: String, api_key: String) -> Array[String]:
 	
 	return headers
 
-# 获取请求URL
+# 获取请求URL（新增对兼容模式的处理，如果需要动态URL，可在这里扩展）
 static func get_url(api_type: String, model: String = "") -> String:
 	_initialize()
 	var provider = get_provider(api_type)
@@ -218,6 +232,10 @@ static func get_url(api_type: String, model: String = "") -> String:
 	if url.find("{model}") != -1:
 		url = url.replace("{model}", model)
 	
+	# 新增：如果api_type是OpenAICompatible，可以添加自定义逻辑（如从全局配置读取URL）
+	# if api_type == "OpenAICompatible":
+	#     url = GlobalConfig.custom_openai_url  # 示例扩展，需项目支持
+	 
 	return url
 
 # 解析API响应
