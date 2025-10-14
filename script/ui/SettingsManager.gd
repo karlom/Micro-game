@@ -15,7 +15,11 @@ var current_settings = {
 	"api_type": "Ollama",
 	"model": "qwen2.5:1.5b",
 	"api_key": "",
-	"show_ai_model_label": true
+	"show_ai_model_label": true,
+	# 显示设置
+	"window_mode": "windowed", # windowed | fullscreen | exclusive_fullscreen
+	"screen_width": 1280,
+	"screen_height": 720
 }
 
 # 角色独立AI设置
@@ -46,6 +50,8 @@ func update_settings(new_settings: Dictionary):
 	save_settings()
 	settings_changed.emit(current_settings.duplicate())
 	print("[SettingsManager] 设置已更新并通知所有监听者")
+	# 应用显示设置
+	apply_display_settings()
 
 # 获取指定API类型的模型列表
 func get_models_for_api(api_type: String) -> Array:
@@ -93,6 +99,8 @@ func load_settings():
 	
 	# 加载角色AI设置
 	load_character_ai_settings()
+	# 应用显示设置
+	apply_display_settings()
 
 # 获取角色AI设置（优先使用角色独立设置，没有则返回默认设置）
 func get_character_ai_settings(character_name: String) -> Dictionary:
@@ -155,3 +163,33 @@ func load_character_ai_settings():
 			print("[SettingsManager错误] 无法打开角色AI配置文件进行读取：", CHARACTER_AI_CONFIG_FILE)
 	else:
 		print("[SettingsManager] 角色AI配置文件不存在，使用空配置")
+
+# 应用显示与窗口模式设置
+func apply_display_settings(settings: Dictionary = {}):
+	var s = settings if not settings.is_empty() else current_settings
+	var win := get_tree().root
+	if not win:
+		return
+
+	var mode: String = s.get("window_mode", "windowed")
+	match mode:
+		"exclusive_fullscreen":
+			win.mode = Window.MODE_EXCLUSIVE_FULLSCREEN
+			var w = int(s.get("screen_width", 1920))
+			var h = int(s.get("screen_height", 1080))
+			win.size = Vector2i(w, h)
+		"fullscreen":
+			win.mode = Window.MODE_FULLSCREEN
+		"windowed":
+			win.mode = Window.MODE_WINDOWED
+			win.borderless = false
+			var w2 = int(s.get("screen_width", 1280))
+			var h2 = int(s.get("screen_height", 720))
+			win.size = Vector2i(w2, h2)
+			var screen = win.current_screen
+			var scr = DisplayServer.screen_get_size(screen)
+			win.position = (scr - win.size) / 2
+
+	# 兜底设置缩放
+	win.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND

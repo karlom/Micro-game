@@ -25,6 +25,14 @@ GameSaveManager="*res://script/GameSaveManager.gd"
 SaveLoadUIManager="*res://scene/ui/SaveLoadUIManager.tscn"
 MemoryManager="*res://script/ai/memory/MemoryManager.gd"
 
+[display]
+
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+#Baseviewportsizeandscaling(improvesmacOS/HiDPIfullscreen)window/size/viewport_width=1920
+display/window/dpi/allow_hidpi=true
+
 [dotnet]
 
 project/assembly_name="Microverse"
