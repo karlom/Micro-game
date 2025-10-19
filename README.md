@@ -102,8 +102,8 @@
 
 ### 1. 克隆项目
 ```bash
-git clone https://github.com/KsanaDock/Microverse.git
-cd microverse
+git clone https://github.com/karlom/Micro-game.git
+cd Micro-game
 ```
 
 ### 2. 打开项目
