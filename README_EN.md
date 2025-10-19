@@ -104,8 +104,8 @@ A god-simulation sandbox game built on Godot 4 as a multi-agent AI social simula
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/KsanaDock/Microverse.git
-   cd microverse
+   git clone https://github.com/karlom/Micro-game.git
+   cd micro-game
    ```
 
 2. **Open with Godot**
